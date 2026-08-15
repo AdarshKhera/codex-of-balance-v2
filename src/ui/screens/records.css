@@ -1,0 +1,101 @@
+.records__chrome {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding-bottom: var(--space-6);
+}
+
+.records__title {
+  font-size: var(--text-title);
+  margin-top: var(--space-2);
+}
+
+.records__empty {
+  flex: 1;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: var(--space-3);
+  text-align: center;
+  color: var(--bone-500);
+}
+
+.records__empty .display {
+  font-size: var(--text-display);
+  color: var(--bone-300);
+}
+
+.records__empty p:last-child {
+  font-size: var(--text-small);
+  max-width: 24ch;
+}
+
+.records__list {
+  list-style: none;
+  display: grid;
+}
+
+.record {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-1);
+  border-bottom: 1px solid var(--ink-600);
+}
+
+.record__rank {
+  font-size: var(--text-micro);
+  color: var(--bone-600);
+  font-variant-numeric: tabular-nums;
+}
+
+.record__who {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.record__name {
+  font-size: var(--text-body);
+  color: var(--bone-200);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.record__meta {
+  font-size: var(--text-micro);
+  color: var(--bone-600);
+  letter-spacing: 0.04em;
+}
+
+.record__score {
+  font-family: var(--font-display);
+  font-size: var(--text-lead);
+  color: var(--bone-300);
+  font-variant-numeric: tabular-nums;
+}
+
+.record__score.is-up { color: var(--gilt); }
+.record__score.is-down { color: var(--bone-500); }
+
+.records__clear {
+  margin: var(--space-6) auto 0;
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--radius-full);
+  font-size: var(--text-small);
+  letter-spacing: 0.04em;
+  color: var(--bone-500);
+  border: 1px solid transparent;
+  transition: color var(--dur-fast) var(--ease-enter),
+    border-color var(--dur-fast) var(--ease-enter);
+}
+
+.records__clear:hover { color: var(--bone-300); }
+
+.records__clear.is-arming {
+  color: var(--verdict-lose);
+  border-color: rgba(176, 115, 107, 0.4);
+}

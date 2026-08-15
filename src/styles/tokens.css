@@ -1,0 +1,110 @@
+/* ============================================================
+   Design tokens. Every value in the UI resolves to one of these.
+   Nothing in a component file should invent its own number.
+   ============================================================ */
+
+:root {
+  /* --- Surface: deep ink, warmed slightly so it reads as vellum-at-night
+         rather than pure black. Layers get lighter as they come forward. --- */
+  --ink-900: #08090b;
+  --ink-800: #0a0b0d;
+  --ink-700: #101216;
+  --ink-600: #171a1f;
+  --ink-500: #1f232a;
+
+  /* --- Ink-on-page: bone rather than white. Pure #fff on near-black
+         vibrates; bone sits calmly and reads as aged paper. --- */
+  --bone-100: #f4f1ea;
+  --bone-200: #e6e1d6;
+  --bone-300: #c8c2b5;
+  --bone-400: #8e8a80;
+  --bone-500: #605d57;
+  --bone-600: #3a3833;
+
+  /* --- The single accent. Used for the player, for focus, for the
+         moment that matters. Restraint is the whole point. --- */
+  --gilt: #c9a227;
+  --gilt-soft: rgba(201, 162, 39, 0.16);
+  --gilt-line: rgba(201, 162, 39, 0.42);
+
+  /* --- Outcome hues, desaturated to sit inside the palette --- */
+  --verdict-win: #7fa87f;
+  --verdict-lose: #b0736b;
+  --verdict-draw: var(--bone-400);
+
+  /* --- Type --- */
+  --font-display: 'Instrument Serif', 'Iowan Old Style', Georgia, serif;
+  --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+
+  /* Type scale, a fifth-ish progression, not arbitrary Tailwind steps */
+  --text-micro: 0.6875rem; /* 11: eyebrows, meta */
+  --text-small: 0.8125rem; /* 13: labels */
+  --text-body: 0.9375rem; /* 15: body */
+  --text-lead: 1.125rem; /* 18: lead paragraph */
+  --text-title: 1.75rem; /* 28: screen titles */
+  --text-display: 2.5rem; /* 40: the codex line */
+  --text-hero: 3.25rem; /* 52: prologue / verdict */
+
+  --tracking-eyebrow: 0.24em;
+  --tracking-tight: -0.02em;
+
+  /* --- Space: 4px base, geometric-ish --- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+
+  /* --- Radius --- */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --radius-full: 999px;
+
+  /* --- Motion. Games live or die here. Two curves only:
+         `exit` for things leaving, `enter` for things arriving with weight. --- */
+  --ease-enter: cubic-bezier(0.16, 1, 0.3, 1); /* strong decel, feels physical */
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1); /* slight overshoot */
+
+  --dur-fast: 180ms;
+  --dur-base: 320ms;
+  --dur-slow: 620ms;
+  --dur-glacial: 1100ms;
+
+  /* --- Elevation: light comes from above, very softly --- */
+  --shadow-raised: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.28);
+  --shadow-float: 0 2px 6px rgba(0, 0, 0, 0.45), 0 20px 60px rgba(0, 0, 0, 0.4);
+
+  /* --- Safe areas for notched devices --- */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Per-element accent hues. Deliberately muted, these only ever appear as a
+   faint aura behind a sigil at the moment of reveal, never as fill. */
+:root {
+  --el-void: #6b6f7a;
+  --el-light: #d8c078;
+  --el-water: #6f96b8;
+  --el-fire: #c07a5a;
+  --el-life: #7fa07a;
+  --el-lightning: #c4b06a;
+  --el-ice: #8fb0c4;
+  --el-mind: #9a8fb8;
+  --el-chaos: #b07f9a;
+  --el-spirit: #b8ad9a;
+  --el-time: #8a8f9a;
+  --el-order: #7a96a0;
+  --el-stone: #8f8880;
+  --el-mist: #a0a8b0;
+  --el-balance: #c2a878;
+  --el-dream: #8f8fb8;
+  --el-death: #7a7472;
+  --el-mask: #a88f9a;
+  --el-dragon: #c9a227;
+}

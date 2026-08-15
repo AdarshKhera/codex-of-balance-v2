@@ -1,0 +1,71 @@
+.naming__chrome {
+  margin: 0 calc(var(--space-2) * -1);
+}
+
+.naming__main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-7);
+  text-align: center;
+}
+
+.naming__block {
+  display: grid;
+  gap: var(--space-3);
+  justify-items: center;
+}
+
+.naming__title {
+  font-size: var(--text-display);
+}
+
+/* An underline rather than a box. A boxed input in a game reads as a form;
+   a rule reads as a place to write your name in a book. */
+.naming__field {
+  position: relative;
+  width: min(20rem, 100%);
+}
+
+.naming__input {
+  width: 100%;
+  padding: var(--space-3) var(--space-2);
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: var(--text-title);
+  color: var(--bone-100);
+  background: none;
+  border: none;
+}
+
+.naming__input::placeholder {
+  color: var(--bone-600);
+}
+
+.naming__input:focus {
+  outline: none;
+}
+
+.naming__rule {
+  display: block;
+  height: 1px;
+  background: var(--bone-600);
+  transition: background-color var(--dur-base) var(--ease-enter);
+}
+
+.naming__input:focus + .naming__rule {
+  background: var(--gilt);
+}
+
+.naming__terms {
+  font-size: var(--text-small);
+  color: var(--bone-500);
+  letter-spacing: 0.02em;
+}
+
+.naming__foot {
+  display: grid;
+  place-items: center;
+}

@@ -1,0 +1,53 @@
+.prologue {
+  position: relative;
+  z-index: 1;
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: var(--space-6);
+  cursor: pointer;
+}
+
+.prologue__stage {
+  max-width: 22ch;
+  text-align: center;
+}
+
+/* Each line fades up, holds, then fades out on its own, so the screen is
+   never empty and never abrupt. Timing is tuned to reading speed, not to
+   what looked good in a static screenshot. */
+.prologue__line {
+  font-size: var(--text-display);
+  color: var(--bone-200);
+  animation: line-cycle 2100ms var(--ease-enter) both;
+}
+
+@keyframes line-cycle {
+  0% { opacity: 0; transform: translateY(10px); filter: blur(4px); }
+  22% { opacity: 1; transform: translateY(0); filter: blur(0); }
+  76% { opacity: 1; transform: translateY(0); filter: blur(0); }
+  100% { opacity: 0; transform: translateY(-8px); filter: blur(3px); }
+}
+
+.prologue__title-block {
+  display: grid;
+  gap: var(--space-4);
+  justify-items: center;
+}
+
+.prologue__title {
+  font-size: var(--text-hero);
+}
+
+.prologue__skip {
+  position: absolute;
+  bottom: calc(var(--safe-bottom) + var(--space-6));
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: var(--text-micro);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--bone-600);
+  animation: veil var(--dur-glacial) var(--ease-enter) 1400ms both;
+}
