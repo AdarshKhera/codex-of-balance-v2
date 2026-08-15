@@ -4,6 +4,25 @@
   margin: 0 calc(var(--space-2) * -1);
 }
 
+/* A slow breathing colour shift, not a scale/shake, so it reads as gently
+   alive rather than as an urgent badge demanding a tap. */
+.title__codex-hint {
+  animation: codex-hint 3.2s ease-in-out infinite;
+}
+
+.title__codex-hint:hover {
+  animation-play-state: paused;
+}
+
+@keyframes codex-hint {
+  0%, 100% { color: var(--bone-400); }
+  50% { color: var(--gilt); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .title__codex-hint { animation: none; }
+}
+
 .title__main {
   flex: 1;
   display: flex;

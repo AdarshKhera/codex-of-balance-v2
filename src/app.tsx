@@ -34,13 +34,7 @@ export default function App() {
     setView(target);
   };
 
-  // The tutorial opens on its own right after the prologue, so a first-time
-  // player sees "how to play" without having to find the button themselves.
-  // The button stays on the title screen for anyone who wants it again later.
-  const finishPrologue = useCallback(() => {
-    setView('title');
-    setTutorialOpen(true);
-  }, []);
+  const finishPrologue = useCallback(() => setView('title'), []);
 
   const begin = (name: string) => {
     setMatch(createMatch(name));

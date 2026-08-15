@@ -14,7 +14,10 @@ export function Title({ onBegin, onCodex, onRecords, onTutorial }: TitleProps) {
       {/* One icon to each side. Both stacked on the right left the header
           visibly lopsided. */}
       <header className="title__chrome">
-        <button className="icon-btn" onClick={onCodex} aria-label="Open the Codex">
+        {/* A slow pulse instead of forcing the tutorial open. It draws the
+            eye toward "if you're lost, the book is right here" without
+            blocking the play button a new visitor actually wants. */}
+        <button className="icon-btn title__codex-hint" onClick={onCodex} aria-label="Open the Codex">
           <CodexIcon />
         </button>
         <button className="icon-btn" onClick={onRecords} aria-label="View records">
