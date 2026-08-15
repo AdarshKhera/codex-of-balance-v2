@@ -3,13 +3,11 @@ import './prologue.css';
 
 const LINES = [
   'First there was only the making.',
-  'Light, and water, and fire, and stone.',
-  'Each one certain it was the answer.',
-  'Nothing held them apart.',
+  'Light, and water, and fire, and stone. Each one certain it was the answer.',
   'Then, balance.'
 ];
 
-const LINE_MS = 2100;
+const LINE_MS = 2400;
 
 export function Prologue({ onDone }: { onDone: () => void }) {
   const [i, setI] = useState(0);
@@ -40,7 +38,13 @@ export function Prologue({ onDone }: { onDone: () => void }) {
             </h1>
           </div>
         ) : (
-          <p key={i} className="display prologue__line">
+          <p
+            key={i}
+            className="display prologue__line"
+            /* Fed from the constant so the fade can never drift out of step
+               with how long the line is actually held. */
+            style={{ animationDuration: `${LINE_MS}ms` }}
+          >
             {LINES[i]}
           </p>
         )}

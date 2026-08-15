@@ -6,6 +6,7 @@ import { Match } from './ui/screens/Match';
 import { Verdict } from './ui/screens/Verdict';
 import { Codex } from './ui/screens/Codex';
 import { Records } from './ui/screens/Records';
+import { Tutorial } from './ui/screens/Tutorial';
 import {
   clearRecords,
   createMatch,
@@ -19,14 +20,12 @@ import type { ElementId } from './game/elements';
 
 type View = 'prologue' | 'title' | 'naming' | 'match' | 'verdict' | 'codex' | 'records';
 
-const PROLOGUE_KEY = 'codex.v2.prologue-seen';
-
 export default function App() {
-  const [view, setView] = useState<View>(() =>
-    localStorage.getItem(PROLOGUE_KEY) ? 'title' : 'prologue'
-  );
+  // The prologue opens every launch. It is three lines and a tap dismisses it.
+  const [view, setView] = useState<View>('prologue');
   /** Where an overlay screen (codex/records) should return to. */
   const [origin, setOrigin] = useState<View>('title');
+  const [tutorialOpen, setTutorialOpen] = useState(false);
   const [match, setMatch] = useState<MatchState | null>(null);
   const [records, setRecords] = useState<Record_[]>(loadRecords);
 
@@ -35,10 +34,7 @@ export default function App() {
     setView(target);
   };
 
-  const finishPrologue = useCallback(() => {
-    localStorage.setItem(PROLOGUE_KEY, '1');
-    setView('title');
-  }, []);
+  const finishPrologue = useCallback(() => setView('title'), []);
 
   const begin = (name: string) => {
     setMatch(createMatch(name));
@@ -71,6 +67,7 @@ export default function App() {
           onBegin={() => setView('naming')}
           onCodex={() => openOverlay('codex')}
           onRecords={() => openOverlay('records')}
+          onTutorial={() => setTutorialOpen(true)}
         />
       )}
 
@@ -102,6 +99,16 @@ export default function App() {
           records={records}
           onClose={() => setView(origin)}
           onClear={() => setRecords(clearRecords())}
+        />
+      )}
+
+      {tutorialOpen && (
+        <Tutorial
+          onClose={() => setTutorialOpen(false)}
+          onOpenCodex={() => {
+            setTutorialOpen(false);
+            openOverlay('codex');
+          }}
         />
       )}
     </>

@@ -1,0 +1,224 @@
+.tutorial {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: end center;
+  padding: var(--space-4);
+  padding-bottom: calc(var(--safe-bottom) + var(--space-4));
+  background: rgba(4, 5, 6, 0.72);
+  backdrop-filter: blur(6px);
+  animation: veil var(--dur-base) var(--ease-enter) both;
+}
+
+@media (min-height: 700px) {
+  .tutorial { place-items: center; }
+}
+
+.tutorial__card {
+  width: min(26rem, 100%);
+  display: grid;
+  gap: var(--space-5);
+  padding: var(--space-5);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: var(--ink-700);
+  box-shadow: var(--shadow-float);
+  animation: sheet-in var(--dur-slow) var(--ease-enter) both;
+}
+
+@keyframes sheet-in {
+  from { opacity: 0; transform: translateY(24px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.tutorial__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: calc(var(--space-2) * -1) calc(var(--space-2) * -1) 0 0;
+}
+
+/* --- Illustration well --- */
+
+.tutorial__art {
+  display: grid;
+  place-items: center;
+  min-height: 112px;
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.022);
+  animation: veil var(--dur-base) var(--ease-enter) both;
+}
+
+.art { display: grid; place-items: center; }
+
+.art--row {
+  grid-auto-flow: column;
+  gap: var(--space-3);
+}
+
+.art__chip {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  opacity: 0.5;
+  animation: bloom var(--dur-base) var(--ease-spring) both;
+}
+
+.art__chip.is-chosen {
+  opacity: 1;
+  border-color: var(--gilt-line);
+  background: radial-gradient(circle at 50% 35%, var(--gilt-soft), transparent 72%);
+}
+
+.art--pair,
+.art__pair {
+  display: grid;
+  grid-auto-flow: column;
+  align-items: center;
+  justify-items: center;
+  gap: var(--space-5);
+}
+
+/* Column flow, so the verdict sits under the pair rather than beside it. */
+.art--stack {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-3);
+}
+
+.art__side {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-2);
+}
+
+.art__side em {
+  font-style: normal;
+  font-size: var(--text-micro);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--bone-500);
+}
+
+.art__side--hidden { color: var(--bone-600); }
+
+.art__unknown {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  color: var(--bone-500);
+}
+
+.art__seam {
+  width: 1px;
+  height: 48px;
+  background: linear-gradient(180deg, transparent, var(--bone-600), transparent);
+}
+
+.art__verdict {
+  font-size: var(--text-small);
+  color: var(--gilt);
+  text-align: center;
+}
+
+/* --- Copy --- */
+
+.tutorial__text {
+  display: grid;
+  gap: var(--space-2);
+  text-align: center;
+  animation: rise var(--dur-base) var(--ease-enter) both;
+}
+
+.tutorial__title { font-size: var(--text-title); }
+
+.tutorial__body {
+  font-size: var(--text-body);
+  line-height: 1.6;
+  color: var(--bone-400);
+  text-wrap: balance;
+}
+
+/* --- The nudge toward the Codex --- */
+
+.tutorial__hint {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--gilt-line);
+  background: radial-gradient(circle at 8% 0%, var(--gilt-soft), transparent 72%);
+  text-align: left;
+  font-size: var(--text-small);
+  line-height: 1.5;
+  color: var(--bone-300);
+  animation: rise var(--dur-base) var(--ease-enter) both;
+  transition: border-color var(--dur-fast) var(--ease-enter);
+}
+
+.tutorial__hint:hover { border-color: var(--gilt); }
+.tutorial__hint svg { color: var(--gilt); }
+
+/* --- Footer --- */
+
+.tutorial__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.tutorial__dots {
+  display: flex;
+  gap: 6px;
+  list-style: none;
+}
+
+.tutorial__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: var(--bone-600);
+  transition: background-color var(--dur-base) var(--ease-enter),
+    transform var(--dur-base) var(--ease-spring);
+}
+
+.tutorial__dot.is-on {
+  background: var(--gilt);
+  transform: scale(1.25);
+}
+
+.tutorial__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.tutorial__next {
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-full);
+  border: 1px solid var(--gilt-line);
+  color: var(--bone-100);
+  font-size: var(--text-small);
+  letter-spacing: 0.04em;
+  background: radial-gradient(circle at 50% 0%, var(--gilt-soft), transparent 76%);
+  transition: border-color var(--dur-base) var(--ease-enter),
+    box-shadow var(--dur-base) var(--ease-enter), transform var(--dur-fast) var(--ease-enter);
+}
+
+.tutorial__next:hover {
+  border-color: var(--gilt);
+  box-shadow: 0 0 0 5px var(--gilt-soft);
+}
+
+.tutorial__next:active { transform: scale(0.97); }

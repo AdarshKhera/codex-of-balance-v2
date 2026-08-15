@@ -24,7 +24,7 @@ export function Codex({ onClose }: { onClose: () => void }) {
       <header className="codex__chrome">
         <div>
           <p className="eyebrow">The Codex</p>
-          <h2 className="display codex__title">How to play</h2>
+          <h2 className="display codex__title">What beats what</h2>
         </div>
         <button className="icon-btn" onClick={onClose} aria-label="Close the Codex">
           <CloseIcon />

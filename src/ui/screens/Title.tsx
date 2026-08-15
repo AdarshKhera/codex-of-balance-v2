@@ -5,11 +5,14 @@ interface TitleProps {
   onBegin: () => void;
   onCodex: () => void;
   onRecords: () => void;
+  onTutorial: () => void;
 }
 
-export function Title({ onBegin, onCodex, onRecords }: TitleProps) {
+export function Title({ onBegin, onCodex, onRecords, onTutorial }: TitleProps) {
   return (
     <div className="screen title">
+      {/* One icon to each side. Both stacked on the right left the header
+          visibly lopsided. */}
       <header className="title__chrome">
         <button className="icon-btn" onClick={onCodex} aria-label="Open the Codex">
           <CodexIcon />
@@ -35,14 +38,24 @@ export function Title({ onBegin, onCodex, onRecords }: TitleProps) {
           </p>
         </div>
 
-        <button
-          className="action bloom"
-          style={{ animationDelay: '460ms' }}
-          onClick={onBegin}
-          aria-label="Begin a match"
-        >
-          <PlayIcon size={24} />
-        </button>
+        <div className="title__actions">
+          <button
+            className="action bloom"
+            style={{ animationDelay: '460ms' }}
+            onClick={onBegin}
+            aria-label="Begin a match"
+          >
+            <PlayIcon size={24} />
+          </button>
+
+          <button
+            className="text-btn title__howto veil"
+            style={{ animationDelay: '600ms' }}
+            onClick={onTutorial}
+          >
+            How to play
+          </button>
+        </div>
       </main>
 
       <footer className="title__foot veil" style={{ animationDelay: '640ms' }}>
