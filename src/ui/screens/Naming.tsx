@@ -3,13 +3,12 @@ import { BackIcon, ForwardIcon } from '../Icons';
 import './naming.css';
 
 interface NamingProps {
-  rounds: number;
-  target: number;
+  blurb: string;
   onBegin: (name: string) => void;
   onBack: () => void;
 }
 
-export function Naming({ rounds, target, onBegin, onBack }: NamingProps) {
+export function Naming({ blurb, onBegin, onBack }: NamingProps) {
   const [name, setName] = useState('');
   const trimmed = name.trim();
 
@@ -51,7 +50,7 @@ export function Naming({ rounds, target, onBegin, onBack }: NamingProps) {
         </div>
 
         <p className="naming__terms rise" style={{ animationDelay: '280ms' }}>
-          Best of {rounds}. First to {target} takes the match.
+          {blurb}
         </p>
       </main>
 

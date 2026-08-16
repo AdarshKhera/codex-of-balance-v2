@@ -1,16 +1,18 @@
 import { BackIcon } from '../Icons';
-import { CHAPTERS, elementsThroughChapter, romanNumeral } from '../../game/ascent';
+import { CHAPTERS, chapterConfig, elementsThroughChapter, romanNumeral } from '../../game/ascent';
 import { DRAGON_FULL_NAME } from '../../game/elements';
+import { maxScore, starsForScore } from '../../game/engine';
 import './level-select.css';
 
 interface LevelSelectProps {
   playerName: string;
   highestChapter: number;
+  bestScore: Record<number, number>;
   onSelect: (chapter: number) => void;
   onBack: () => void;
 }
 
-export function LevelSelect({ playerName, highestChapter, onSelect, onBack }: LevelSelectProps) {
+export function LevelSelect({ playerName, highestChapter, bestScore, onSelect, onBack }: LevelSelectProps) {
   return (
     <div className="screen level-select">
       <header className="level-select__chrome">
@@ -48,7 +50,13 @@ export function LevelSelect({ playerName, highestChapter, onSelect, onBack }: Le
                   </span>
                 </span>
                 <span className="level-row__status" aria-hidden="true">
-                  {locked ? <LockIcon /> : cleared ? <CheckIcon /> : <span className="level-row__dot" />}
+                  {locked ? (
+                    <LockIcon />
+                  ) : cleared ? (
+                    <MiniStars earned={starsForScore(bestScore[c.number] ?? 0, maxScore(chapterConfig(c.number)))} />
+                  ) : (
+                    <span className="level-row__dot" />
+                  )}
                 </span>
               </button>
             </li>
@@ -68,10 +76,23 @@ function LockIcon() {
   );
 }
 
-function CheckIcon() {
+function MiniStars({ earned }: { earned: number }) {
   return (
-    <svg width="16" height="16" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M7 17l6 6 12-14" />
-    </svg>
+    <span className="mini-stars">
+      {[1, 2, 3].map((n) => (
+        <svg
+          key={n}
+          width="9"
+          height="9"
+          viewBox="0 0 32 32"
+          fill={n <= earned ? 'currentColor' : 'none'}
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinejoin="round"
+        >
+          <path d="M16 4l3.4 8.1 8.6.7-6.6 5.7 2 8.5-7.4-4.6-7.4 4.6 2-8.5-6.6-5.7 8.6-.7L16 4Z" />
+        </svg>
+      ))}
+    </span>
   );
 }

@@ -89,6 +89,11 @@
 .level-row.is-cleared .level-row__status { color: var(--gilt); }
 .level-row.is-cleared .level-row__numeral { color: var(--bone-400); }
 
+.mini-stars {
+  display: flex;
+  gap: 2px;
+}
+
 /* Locked: present, legible, unmistakably not yet yours. */
 .level-row.is-locked {
   opacity: 0.4;

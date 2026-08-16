@@ -10,7 +10,6 @@ import {
   relations
 } from '../../game/elements';
 import type { ElementId } from '../../game/elements';
-import { RULES } from '../../game/engine';
 import './codex.css';
 
 /* The rules screen, as an index of the elements rather than a bullet list.
@@ -32,11 +31,12 @@ export function Codex({ onClose }: { onClose: () => void }) {
       </header>
 
       <p className="codex__intro">
-        Every round, you pick one element. Your opponent picks one too, without
-        seeing yours. Every pair already has an answer: some beat each other,
-        some tie. Win {RULES.target} rounds out of {RULES.rounds} and the match
-        is yours. Now and then the Dragon is dealt in. The Dragon beats
-        everything except another Dragon, so take it when you see it.
+        Every round, your conscience reveals an element first. You answer it,
+        knowing what you're answering. Every pair already has an answer: some
+        beat each other, some tie. Beating them is worth 3 points, a tie is
+        worth 1, and each loss costs a life. Every element is single-use for
+        the level, so the real question is never just what beats what, it's
+        what you can still afford to spend.
       </p>
 
       <ul className="codex__list">

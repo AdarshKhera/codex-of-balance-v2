@@ -4,6 +4,7 @@ import { Title } from './ui/screens/Title';
 import { ModeSelect } from './ui/screens/ModeSelect';
 import { Naming } from './ui/screens/Naming';
 import { LevelSelect } from './ui/screens/LevelSelect';
+import { StudyScreen } from './ui/screens/StudyScreen';
 import { Match } from './ui/screens/Match';
 import { ChapterClear } from './ui/screens/ChapterClear';
 import { Verdict } from './ui/screens/Verdict';
@@ -14,20 +15,22 @@ import {
   clearRecords,
   createMatch,
   loadRecords,
+  maxScore,
   nextRound,
   playRound,
   saveRecord,
-  matchOutcome,
-  RULES,
+  starsForScore,
   FREE_PLAY_RULES
 } from './game/engine';
 import type { MatchState, Record_ } from './game/engine';
 import type { ElementId } from './game/elements';
 import {
+  chapterByNumber,
   chapterConfig,
   loadAscent,
   loadLeaderboard,
-  recordStoryWin,
+  newPairsForChapter,
+  recordLevelResult,
   upsertLeaderboard
 } from './game/ascent';
 import type { AscentProgress, Chapter, LeaderboardEntry } from './game/ascent';
@@ -38,6 +41,7 @@ type View =
   | 'mode'
   | 'naming'
   | 'levelSelect'
+  | 'study'
   | 'match'
   | 'chapterClear'
   | 'verdict'
@@ -59,7 +63,7 @@ export default function App() {
   const [chapter, setChapter] = useState(1);
   const [ascent, setAscent] = useState<AscentProgress>(loadAscent);
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>(loadLeaderboard);
-  /** Set the instant a Story win advances a chapter; drives the Verdict CTA and ChapterClear. */
+  /** Set the instant a Story clear advances a chapter; drives the Verdict CTA and ChapterClear. */
   const [justUnlocked, setJustUnlocked] = useState<Chapter | null>(null);
 
   const [match, setMatch] = useState<MatchState | null>(null);
@@ -69,7 +73,8 @@ export default function App() {
   // global.css) whenever a Story chapter is actually on screen, and reverts
   // to neutral everywhere else, including Free Play and the level map.
   useEffect(() => {
-    const inChapter = mode === 'story' && (view === 'match' || view === 'chapterClear' || view === 'verdict');
+    const inChapter =
+      mode === 'story' && (view === 'study' || view === 'match' || view === 'chapterClear' || view === 'verdict');
     if (inChapter) {
       document.documentElement.dataset.chapter = String(chapter);
     } else {
@@ -84,10 +89,14 @@ export default function App() {
 
   const finishPrologue = useCallback(() => setView('title'), []);
 
-  /** Start a specific chapter's match. Assumes playerName is already set. */
-  const beginChapter = (n: number) => {
+  /** Chosen a chapter on the level map: show what's new before playing it. */
+  const openChapter = (n: number) => {
     setChapter(n);
     setJustUnlocked(null);
+    setView('study');
+  };
+
+  const beginChapter = (n: number) => {
     setMatch(createMatch(playerName, chapterConfig(n)));
     setView('match');
   };
@@ -97,7 +106,7 @@ export default function App() {
     setView('match');
   };
 
-  const choose = (element: ElementId) => {
+  const choose = (element: ElementId | 'dragon') => {
     setMatch((current) => (current ? playRound(current, element) : current));
   };
 
@@ -107,11 +116,16 @@ export default function App() {
     if (view !== 'match' || !match?.complete) return;
     setRecords((existing) => saveRecord(match, existing));
 
-    // Free Play never touches the Ascent, only genuine Story wins do.
-    if (mode === 'story' && matchOutcome(match) === 'player') {
-      const { progress, unlocked } = recordStoryWin(chapter, ascent);
+    // Free Play never touches the Ascent, only genuine Story clears do.
+    if (mode === 'story') {
+      const cleared = match.status === 'cleared';
+      const { progress, unlocked } = recordLevelResult(chapter, match.score, cleared, ascent);
       setAscent(progress);
-      setLeaderboard(upsertLeaderboard(match.playerName, progress));
+      setLeaderboard(
+        upsertLeaderboard(match.playerName, progress, (ch, score) =>
+          starsForScore(score, maxScore(chapterConfig(ch)))
+        )
+      );
       setJustUnlocked(unlocked);
     }
 
@@ -153,8 +167,11 @@ export default function App() {
 
       {view === 'naming' && (
         <Naming
-          rounds={mode === 'story' ? RULES.rounds : FREE_PLAY_RULES.rounds}
-          target={mode === 'story' ? RULES.target : FREE_PLAY_RULES.target}
+          blurb={
+            mode === 'story'
+              ? 'Each level is its own trial. Learn the pattern, spend wisely, and mind your lives.'
+              : `Free Play: the full eighteen, ${FREE_PLAY_RULES.rounds} rounds, one Dragon charge. No lives to lose, just a score to beat.`
+          }
           onBegin={(name) => {
             if (mode === 'story') {
               setPlayerName(name);
@@ -171,8 +188,17 @@ export default function App() {
         <LevelSelect
           playerName={playerName}
           highestChapter={ascent.highestChapter}
-          onSelect={beginChapter}
+          bestScore={ascent.bestScore}
+          onSelect={openChapter}
           onBack={() => setView('title')}
+        />
+      )}
+
+      {view === 'study' && (
+        <StudyScreen
+          chapter={chapterByNumber(chapter)}
+          pairs={newPairsForChapter(chapter)}
+          onBegin={() => beginChapter(chapter)}
         />
       )}
 
@@ -193,9 +219,7 @@ export default function App() {
       {view === 'verdict' && match && (
         <Verdict
           state={match}
-          onAgain={() =>
-            mode === 'story' ? beginChapter(chapter) : beginFreePlay(match.playerName)
-          }
+          onAgain={() => (mode === 'story' ? beginChapter(chapter) : beginFreePlay(match.playerName))}
           onTitle={() => setView(mode === 'story' ? 'levelSelect' : 'title')}
           onRecords={() => openOverlay('records')}
           chapterUnlocked={justUnlocked}

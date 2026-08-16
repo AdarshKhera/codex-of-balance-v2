@@ -32,9 +32,7 @@ export function Prologue({ onDone }: { onDone: () => void }) {
               Arehk Games
             </p>
             <h1 className="display prologue__title rise" style={{ animationDelay: '260ms' }}>
-              The Codex
-              <br />
-              of Balance
+              The Scale
             </h1>
           </div>
         ) : (

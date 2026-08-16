@@ -1,8 +1,9 @@
-# The Codex of Balance
+# The Scale
 
-A quiet game of elements. Each round you pick one of eighteen, your opponent picks
-one blind, and the pairing decides itself. Win 6 rounds out of 10 and the match is
-yours.
+A quiet game of elements. Your conscience reveals one first, you answer with one of
+your own, and the pairing decides itself. Every element is single-use for the level,
+so the real question is never just what beats what, it's what you can still afford
+to spend. See `docs/mechanics-v3-plan.md` for the full mechanics writeup.
 
 This is a ground up rebuild of v1. The rules and the writing carried over. The
 design did not.

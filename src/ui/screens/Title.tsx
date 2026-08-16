@@ -31,13 +31,11 @@ export function Title({ onBegin, onCodex, onRecords, onTutorial }: TitleProps) {
             Arehk Games
           </p>
           <h1 className="display title__name rise" style={{ animationDelay: '180ms' }}>
-            The Codex
-            <br />
-            of Balance
+            The Scale
           </h1>
           <p className="title__blurb rise" style={{ animationDelay: '300ms' }}>
-            Eighteen elements. Ten rounds. Every pair already has a winner. The
-            only question is whether you know it yet.
+            Eighteen elements. Ten levels. Every pair already has a winner.
+            The only question is whether you know it yet.
           </p>
         </div>
 

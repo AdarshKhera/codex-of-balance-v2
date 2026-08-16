@@ -1,5 +1,5 @@
 import { RecordsIcon } from '../Icons';
-import { elapsed, matchOutcome } from '../../game/engine';
+import { elapsed, maxScore, starsEarned } from '../../game/engine';
 import type { MatchState } from '../../game/engine';
 import { romanNumeral } from '../../game/ascent';
 import type { Chapter } from '../../game/ascent';
@@ -10,25 +10,10 @@ interface VerdictProps {
   onAgain: () => void;
   onTitle: () => void;
   onRecords: () => void;
-  /** Set only when this win just unlocked a new chapter of the Ascent. */
+  /** Set only when this clear just unlocked a new chapter of the Ascent. */
   chapterUnlocked?: Chapter | null;
   onContinueAscent?: () => void;
 }
-
-const COPY = {
-  player: {
-    label: 'You won',
-    line: 'You knew the weight of each one before you set it down.'
-  },
-  opponent: {
-    label: 'You lost',
-    line: 'The codex was open the whole time. You just read it late.'
-  },
-  draw: {
-    label: 'A tie',
-    line: 'Nothing owed in either direction. Rarer than winning.'
-  }
-} as const;
 
 export function Verdict({
   state,
@@ -38,8 +23,9 @@ export function Verdict({
   chapterUnlocked,
   onContinueAscent
 }: VerdictProps) {
-  const outcome = matchOutcome(state);
-  const copy = COPY[outcome];
+  const cleared = state.status === 'cleared';
+  const stars = starsEarned(state);
+  const max = maxScore(state.config);
 
   return (
     <div className="screen verdict">
@@ -52,24 +38,29 @@ export function Verdict({
       <main className="verdict__main">
         <div className="verdict__block">
           <p className="eyebrow rise">{state.playerName}</p>
-          <h2 className={`display verdict__label rise verdict__label--${outcome}`} style={{ animationDelay: '90ms' }}>
-            {copy.label}
+          <h2 className={`display verdict__label rise verdict__label--${cleared ? 'win' : 'lose'}`} style={{ animationDelay: '90ms' }}>
+            {cleared ? 'Cleared' : 'Not this time'}
           </h2>
-          <p className="verdict__line rise" style={{ animationDelay: '200ms' }}>
-            {copy.line}
-          </p>
+
+          {cleared ? (
+            <Stars earned={stars} />
+          ) : (
+            <p className="verdict__line rise" style={{ animationDelay: '200ms' }}>
+              Out of lives. The pattern was there, you'll see it next time.
+            </p>
+          )}
         </div>
 
         <dl className="verdict__stats rise" style={{ animationDelay: '300ms' }}>
           <div>
             <dt>Score</dt>
             <dd>
-              {state.playerScore}-{state.opponentScore}
+              {state.score} / {max}
             </dd>
           </div>
           <div>
             <dt>Rounds</dt>
-            <dd>{state.roundsPlayed}</dd>
+            <dd>{state.roundIndex}</dd>
           </div>
           <div>
             <dt>Time</dt>
@@ -93,10 +84,38 @@ export function Verdict({
             Leave
           </button>
           <button className="verdict__again" onClick={onAgain}>
-            Again
+            {cleared ? 'Again' : 'Retry'}
           </button>
         </footer>
       )}
     </div>
+  );
+}
+
+function Stars({ earned }: { earned: number }) {
+  return (
+    <div className="verdict__stars rise" style={{ animationDelay: '200ms' }} aria-label={`${earned} of 3 stars`}>
+      {[1, 2, 3].map((n) => (
+        <StarIcon key={n} filled={n <= earned} />
+      ))}
+    </div>
+  );
+}
+
+function StarIcon({ filled }: { filled: boolean }) {
+  return (
+    <svg
+      width="28"
+      height="28"
+      viewBox="0 0 32 32"
+      fill={filled ? 'currentColor' : 'none'}
+      stroke="currentColor"
+      strokeWidth="1.25"
+      strokeLinejoin="round"
+      className={filled ? 'is-filled' : ''}
+      aria-hidden="true"
+    >
+      <path d="M16 4l3.4 8.1 8.6.7-6.6 5.7 2 8.5-7.4-4.6-7.4 4.6 2-8.5-6.6-5.7 8.6-.7L16 4Z" />
+    </svg>
   );
 }

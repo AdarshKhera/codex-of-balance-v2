@@ -1,0 +1,85 @@
+.study__main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  overflow: hidden;
+}
+
+.study__title {
+  font-size: var(--text-title);
+}
+
+.study__note {
+  max-width: 32ch;
+  font-size: var(--text-body);
+  line-height: 1.6;
+  color: var(--bone-400);
+}
+
+.study__list {
+  flex: 1;
+  overflow-y: auto;
+  list-style: none;
+  display: grid;
+  gap: 6px;
+  padding-bottom: var(--space-4);
+}
+
+.study-pair {
+  display: grid;
+  gap: 6px;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.02);
+  animation: rise var(--dur-base) var(--ease-enter) both;
+}
+
+/* Winner, then the verb, then loser: reads left-to-right as a sentence, no
+   need to compare colour or weight between two sides to work out who won. */
+.study-pair__matchup {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.study-pair__verb {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--bone-600);
+  flex-shrink: 0;
+}
+
+.study-pair__side {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--bone-400);
+}
+
+.study-pair__side.is-winner {
+  color: var(--gilt);
+}
+
+.study-pair__side.is-tie {
+  color: var(--bone-300);
+}
+
+.study-pair__name {
+  font-size: var(--text-small);
+  letter-spacing: 0.02em;
+}
+
+.study-pair__line {
+  font-size: 11px;
+  line-height: 1.35;
+  color: var(--bone-600);
+  font-style: italic;
+}
+
+.study__foot {
+  display: grid;
+  place-items: center;
+  padding-top: var(--space-4);
+}

@@ -75,6 +75,80 @@
   background: radial-gradient(circle at 50% 35%, var(--gilt-soft), transparent 72%);
 }
 
+/* The one already spent: struck through, faded further than the rest. */
+.art__chip.is-spent {
+  opacity: 0.28;
+  position: relative;
+}
+
+.art__chip.is-spent::after {
+  content: '';
+  position: absolute;
+  inset: 40% 10%;
+  height: 1px;
+  background: var(--verdict-lose);
+  transform: rotate(-18deg);
+}
+
+.art--queue {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+}
+
+.art__queue-next {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--bone-600);
+}
+
+.art__queue-next em {
+  font-style: normal;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-left: var(--space-1);
+}
+
+.art__mini {
+  display: grid;
+  place-items: center;
+  opacity: 0.55;
+}
+
+.art--score {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+}
+
+.art__points {
+  font-family: var(--font-display);
+  font-size: var(--text-title);
+  color: var(--gilt);
+}
+
+.art__points--tie { color: var(--bone-400); }
+
+.art__lives {
+  display: flex;
+  gap: 5px;
+}
+
+.art__life {
+  width: 10px;
+  height: 10px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--bone-500);
+}
+
+.art__life.is-full { background: var(--verdict-lose); border-color: var(--verdict-lose); }
+
+.art__dragon {
+  animation: dragon-breath 2.6s ease-in-out infinite;
+}
+
 .art--pair,
 .art__pair {
   display: grid;

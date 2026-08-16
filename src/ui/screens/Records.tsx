@@ -49,7 +49,7 @@ export function Records({ records, leaderboard, onClose, onClear }: RecordsProps
               <span className="ascent-row__rank">{i + 1}</span>
               <span className="ascent-row__name">{e.name}</span>
               <span className="ascent-row__chapter">Ch. {romanNumeral(e.highestChapter)}</span>
-              <span className="ascent-row__wins">{e.lifetimeWins} wins</span>
+              <span className="ascent-row__wins">{e.totalScore} pts</span>
             </li>
           ))}
         </ol>

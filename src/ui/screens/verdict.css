@@ -24,9 +24,8 @@
   font-size: var(--text-hero);
 }
 
-.verdict__label--player { color: var(--gilt); }
-.verdict__label--opponent { color: var(--bone-300); }
-.verdict__label--draw { color: var(--bone-300); }
+.verdict__label--win { color: var(--gilt); }
+.verdict__label--lose { color: var(--bone-300); }
 
 .verdict__line {
   max-width: 26ch;
@@ -34,6 +33,17 @@
   line-height: 1.6;
   color: var(--bone-400);
   text-wrap: balance;
+}
+
+.verdict__stars {
+  display: flex;
+  gap: var(--space-2);
+  color: var(--bone-600);
+}
+
+.verdict__stars svg.is-filled {
+  color: var(--gilt);
+  filter: drop-shadow(0 0 6px var(--gilt-soft));
 }
 
 .verdict__stats {

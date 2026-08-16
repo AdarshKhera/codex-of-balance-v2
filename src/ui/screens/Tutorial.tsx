@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Sigil } from '../Sigil';
 import { CloseIcon, CodexIcon } from '../Icons';
-import { RULES } from '../../game/engine';
+import { DRAGON } from '../../game/elements';
 import './tutorial.css';
 
 interface TutorialProps {
@@ -12,16 +12,24 @@ interface TutorialProps {
 
 const STEPS = [
   {
-    title: 'Pick an element',
-    body: `Every round you choose one of eighteen. That is your whole move.`
+    title: 'They move first',
+    body: 'Every round, your conscience reveals an element before you choose. Nothing to guess, only the answer to know.'
   },
   {
-    title: 'Your opponent picks too',
-    body: `Neither of you sees the other's choice until both are down.`
+    title: 'Answer, but spend wisely',
+    body: "Each element is single-use for the whole level. Beat Fire with Water now, and Water's gone if something else needs it later."
   },
   {
-    title: 'Every pair has an answer',
-    body: `Some beat each other, some tie. Win ${RULES.target} rounds out of ${RULES.rounds} and the match is yours.`
+    title: "See what's coming",
+    body: 'You always know the current move and the next two after it. Plan ahead, don’t just react to what’s in front of you.'
+  },
+  {
+    title: 'Points, and three lives',
+    body: 'Beat them: +3. Tie: +1. Lose: 0, and a life. Lose all three lives and the level ends, you just try again.'
+  },
+  {
+    title: 'One Dragon, once',
+    body: 'From Chapter V on, you carry one Dragon charge per level. It beats anything. Spend it on the round nothing else can answer.'
   }
 ] as const;
 
@@ -46,9 +54,11 @@ export function Tutorial({ onClose, onOpenCodex }: TutorialProps) {
         </header>
 
         <div className="tutorial__art" key={step}>
-          {step === 0 && <StepPick />}
-          {step === 1 && <StepBlind />}
-          {step === 2 && <StepResolve />}
+          {step === 0 && <StepFirst />}
+          {step === 1 && <StepSpend />}
+          {step === 2 && <StepQueue />}
+          {step === 3 && <StepScore />}
+          {step === 4 && <StepDragon />}
         </div>
 
         <div className="tutorial__text" key={`t${step}`}>
@@ -95,14 +105,25 @@ export function Tutorial({ onClose, onOpenCodex }: TutorialProps) {
 /* The illustrations reuse the real sigils rather than stand-in artwork, so what
    the tutorial shows is literally what the player will be tapping. */
 
-function StepPick() {
+function StepFirst() {
+  return (
+    <div className="art art--stack">
+      <span className="art__side" style={{ color: 'var(--el-fire)' }}>
+        <Sigil element="fire" size={40} />
+        <em>Conscience plays</em>
+      </span>
+    </div>
+  );
+}
+
+function StepSpend() {
   const row = ['fire', 'water', 'stone', 'dream'] as const;
   return (
     <div className="art art--row">
       {row.map((e, i) => (
         <span
           key={e}
-          className={`art__chip ${i === 1 ? 'is-chosen' : ''}`}
+          className={`art__chip ${i === 1 ? 'is-spent' : ''}`}
           style={{ color: `var(--el-${e})`, animationDelay: `${i * 70}ms` }}
         >
           <Sigil element={e} size={28} />
@@ -112,37 +133,43 @@ function StepPick() {
   );
 }
 
-function StepBlind() {
+function StepQueue() {
   return (
-    <div className="art art--pair">
+    <div className="art art--queue">
       <span className="art__side" style={{ color: 'var(--gilt)' }}>
-        <Sigil element="water" size={36} />
-        <em>You</em>
+        <Sigil element="lightning" size={36} />
+        <em>Now</em>
       </span>
-      <span className="art__seam" />
-      <span className="art__side art__side--hidden">
-        <span className="art__unknown">?</span>
-        <em>Conscience</em>
+      <span className="art__queue-next">
+        <span className="art__mini"><Sigil element="ice" size={18} /></span>
+        <span className="art__mini"><Sigil element="stone" size={18} /></span>
+        <em>Then</em>
       </span>
     </div>
   );
 }
 
-function StepResolve() {
+function StepScore() {
+  return (
+    <div className="art art--score">
+      <span className="art__points">+3</span>
+      <span className="art__points art__points--tie">+1</span>
+      <span className="art__lives">
+        <span className="art__life is-full" />
+        <span className="art__life is-full" />
+        <span className="art__life" />
+      </span>
+    </div>
+  );
+}
+
+function StepDragon() {
   return (
     <div className="art art--stack">
-      <div className="art__pair">
-        <span className="art__side" style={{ color: 'var(--gilt)' }}>
-          <Sigil element="water" size={36} />
-          <em>You</em>
-        </span>
-        <span className="art__seam" />
-        <span className="art__side" style={{ color: 'var(--el-fire)' }}>
-          <Sigil element="fire" size={36} />
-          <em>Conscience</em>
-        </span>
-      </div>
-      <p className="art__verdict">Water puts out fire. You won.</p>
+      <span className="art__side art__dragon" style={{ color: 'var(--el-dragon)' }}>
+        <Sigil element={DRAGON} size={44} />
+        <em>Once per level</em>
+      </span>
     </div>
   );
 }

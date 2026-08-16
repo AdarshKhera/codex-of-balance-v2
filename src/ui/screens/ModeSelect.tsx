@@ -36,8 +36,8 @@ export function ModeSelect({ highestChapter, onStory, onFreePlay, onBack }: Mode
         <button className="mode__card rise" style={{ animationDelay: '190ms' }} onClick={onFreePlay}>
           <span className="mode__card-name display">Free Play</span>
           <span className="mode__card-body">
-            Everything unlocked. Best of {FREE_PLAY_RULES.rounds}, first to{' '}
-            {FREE_PLAY_RULES.target}.
+            Everything unlocked. {FREE_PLAY_RULES.rounds} rounds, one Dragon
+            charge, no lives to lose.
           </span>
         </button>
       </main>
