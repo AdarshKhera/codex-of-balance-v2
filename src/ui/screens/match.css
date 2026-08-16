@@ -202,6 +202,31 @@
   border-color: rgba(255, 255, 255, 0.08);
 }
 
+/* Spent: stays in its grid slot rather than disappearing, so the shape of
+   the hand never reflows mid-level and you can still see what you had. */
+.chip.is-spent {
+  opacity: 0.32;
+  cursor: default;
+  animation: none;
+}
+
+.chip.is-spent:hover {
+  background: none;
+  border-color: transparent;
+}
+
+.chip.is-spent .chip__mark {
+  opacity: 0.5;
+  transform: none;
+}
+
+.chip__used {
+  font-size: 8px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--verdict-lose);
+}
+
 .chip:hover .chip__mark {
   opacity: 1;
   transform: translateY(-2px) scale(1.08);
@@ -212,12 +237,12 @@
 
 /* The Dragon sits in the grid exactly like every other element. The only thing
    marking it out is a slow breath of light, which is enough. */
-.chip--dragon .chip__mark {
+.chip--dragon:not(.is-spent) .chip__mark {
   opacity: 1;
   animation: dragon-breath 2.6s ease-in-out infinite;
 }
 
-.chip--dragon .chip__name { color: var(--gilt); }
+.chip--dragon:not(.is-spent) .chip__name { color: var(--gilt); }
 
 @keyframes dragon-breath {
   0%, 100% {
@@ -240,19 +265,19 @@
   justify-items: center;
 }
 
-.reveal__pair {
+/* Vertical: the opponent's slot sits where "Opponent plays" already sat
+   during Choosing, and your answer grows in underneath it. Nothing moves
+   sideways to a spot it was never in. */
+.reveal__stack {
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: center;
-  gap: var(--space-5);
-  width: 100%;
-  max-width: 22rem;
+  justify-items: center;
+  gap: var(--space-4);
 }
 
-.reveal__seam {
-  width: 1px;
-  height: 96px;
-  background: linear-gradient(180deg, transparent, var(--bone-600), transparent);
+.reveal__seam-v {
+  width: 64px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--bone-600), transparent);
 }
 
 .reveal__slot {

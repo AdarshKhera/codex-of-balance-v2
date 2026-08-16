@@ -62,17 +62,20 @@ export function Match({ state, onChoose, onNext, onQuit, onCodex }: MatchProps) 
       <main className="match__stage">
         {round ? (
           <div className="reveal">
-            <div className="reveal__pair">
+            {/* Opponent stays in the same top spot it held while you were
+                choosing. Your answer grows in underneath it, so nothing
+                jumps sideways to a place it was never shown before. */}
+            <div className="reveal__stack">
               <figure className="reveal__slot reveal__slot--theirs is-in">
-                <Sigil element={round.opponent} size={72} />
-                <figcaption>Them</figcaption>
+                <Sigil element={round.opponent} size={64} />
+                <figcaption>Opponent played</figcaption>
               </figure>
 
-              <span className="reveal__seam" aria-hidden="true" />
+              <span className="reveal__seam-v" aria-hidden="true" />
 
               <figure className={`reveal__slot reveal__slot--mine ${beat >= 0 ? 'is-in' : ''}`}>
-                <Sigil element={round.player} size={72} />
-                <figcaption>You</figcaption>
+                <Sigil element={round.player} size={64} />
+                <figcaption>You answered</figcaption>
               </figure>
             </div>
 
@@ -139,7 +142,7 @@ function Choosing({ state, onChoose }: { state: MatchState; onChoose: (e: Elemen
   return (
     <div className="choosing">
       <div className="ask">
-        <p className="ask__label">Your conscience plays</p>
+        <p className="ask__label">Opponent plays</p>
         <div className="ask__current">
           <Sigil element={current} size={56} />
           <span>{ELEMENT_NAME[current]}</span>
@@ -158,31 +161,45 @@ function Choosing({ state, onChoose }: { state: MatchState; onChoose: (e: Elemen
 
       <div className="hand">
         <p className="hand__prompt">Choose one</p>
+        {/* Iterates the level's full pool, not the shrinking hand, so a
+            spent element stays exactly where it was, dimmed and labelled,
+            instead of vanishing and reflowing everything after it. */}
         <div className="hand__grid">
-          {state.hand.map((element, i) => (
+          {state.config.pool.map((element, i) => {
+            const spent = !state.hand.includes(element);
+            return (
+              <button
+                key={element}
+                className={`chip ${spent ? 'is-spent' : ''}`}
+                style={{ animationDelay: `${Math.min(i * 22, 400)}ms` }}
+                onClick={() => !spent && pick(element)}
+                disabled={spent}
+                aria-label={spent ? `${ELEMENT_NAME[element]}, already used` : ELEMENT_NAME[element]}
+              >
+                <span className="chip__mark" style={{ color: `var(--el-${element})` }}>
+                  <Sigil element={element} size={30} />
+                </span>
+                <span className="chip__name">{ELEMENT_NAME[element]}</span>
+                {spent && <span className="chip__used">Used</span>}
+              </button>
+            );
+          })}
+          {state.config.dragonAvailable && (
             <button
-              key={element}
-              className="chip"
-              style={{ animationDelay: `${Math.min(i * 22, 400)}ms` }}
-              onClick={() => pick(element)}
-              aria-label={ELEMENT_NAME[element]}
-            >
-              <span className="chip__mark" style={{ color: `var(--el-${element})` }}>
-                <Sigil element={element} size={30} />
-              </span>
-              <span className="chip__name">{ELEMENT_NAME[element]}</span>
-            </button>
-          ))}
-          {dragonUsable && (
-            <button
-              className="chip chip--dragon"
-              onClick={() => pick('dragon')}
-              aria-label={`Spend your ${DRAGON_FULL_NAME} charge`}
+              className={`chip chip--dragon ${state.dragonUsed ? 'is-spent' : ''}`}
+              onClick={() => dragonUsable && pick('dragon')}
+              disabled={!dragonUsable}
+              aria-label={
+                state.dragonUsed
+                  ? `${DRAGON_FULL_NAME}, already used`
+                  : `Spend your ${DRAGON_FULL_NAME} charge`
+              }
             >
               <span className="chip__mark" style={{ color: `var(--el-${DRAGON})` }}>
                 <Sigil element={DRAGON} size={30} />
               </span>
               <span className="chip__name">Dragon</span>
+              {state.dragonUsed && <span className="chip__used">Used</span>}
             </button>
           )}
         </div>

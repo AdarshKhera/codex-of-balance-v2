@@ -50,6 +50,8 @@ type View =
 
 type GameMode = 'story' | 'freeplay';
 
+const TUTORIAL_SEEN_KEY = 'codex.v2.tutorial-seen';
+
 export default function App() {
   // The prologue opens every launch. It is three lines and a tap dismisses it.
   const [view, setView] = useState<View>('prologue');
@@ -87,7 +89,17 @@ export default function App() {
     setView(target);
   };
 
-  const finishPrologue = useCallback(() => setView('title'), []);
+  // The tutorial opens itself exactly once, the first time anyone ever
+  // reaches the title screen. After that it only opens if you tap "How to
+  // play" yourself - the goal is a new player is never left guessing what
+  // the rules are, without the modal nagging a returning one.
+  const finishPrologue = useCallback(() => {
+    setView('title');
+    if (!localStorage.getItem(TUTORIAL_SEEN_KEY)) {
+      localStorage.setItem(TUTORIAL_SEEN_KEY, '1');
+      setTutorialOpen(true);
+    }
+  }, []);
 
   /** Chosen a chapter on the level map: show what's new before playing it. */
   const openChapter = (n: number) => {
