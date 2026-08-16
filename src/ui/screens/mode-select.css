@@ -1,0 +1,44 @@
+.mode__chrome {
+  margin: 0 calc(var(--space-2) * -1);
+}
+
+.mode__main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+}
+
+.mode__card {
+  width: 100%;
+  max-width: 22rem;
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-6) var(--space-5);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
+  text-align: left;
+  transition: border-color var(--dur-base) var(--ease-enter),
+    background-color var(--dur-base) var(--ease-enter), transform var(--dur-fast) var(--ease-enter);
+}
+
+.mode__card:hover {
+  border-color: var(--gilt-line);
+  background: radial-gradient(circle at 10% 0%, var(--gilt-soft), transparent 75%);
+}
+
+.mode__card:active { transform: scale(0.985); }
+
+.mode__card-name {
+  font-size: var(--text-title);
+  color: var(--bone-100);
+}
+
+.mode__card-body {
+  font-size: var(--text-small);
+  line-height: 1.6;
+  color: var(--bone-500);
+}

@@ -64,9 +64,26 @@ input {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(80% 55% at 50% 32%, rgba(255, 250, 235, 0.055), transparent 72%),
+    radial-gradient(80% 55% at 50% 32%, var(--chapter-glow, rgba(255, 250, 235, 0.055)), transparent 72%),
     radial-gradient(120% 90% at 50% 110%, rgba(0, 0, 0, 0.55), transparent 60%);
+  transition: background 900ms var(--ease-enter);
 }
+
+/* One accent per Ascent chapter, set via document.documentElement.dataset.chapter
+   in app.tsx while a Story match is on screen. Colour arcs from small and cool,
+   through the deliberately muted Chapter VII (Reckoning: Time, Death), back
+   open through Chapter VIII's haze, and resolves into the game's own gilt
+   accent by IX and X. Free Play and every non-Story screen stay neutral. */
+[data-chapter='1'] { --chapter-glow: rgba(224, 120, 80, 0.065); }
+[data-chapter='2'] { --chapter-glow: rgba(90, 150, 110, 0.06); }
+[data-chapter='3'] { --chapter-glow: rgba(216, 192, 120, 0.06); }
+[data-chapter='4'] { --chapter-glow: rgba(140, 190, 220, 0.07); }
+[data-chapter='5'] { --chapter-glow: rgba(160, 140, 200, 0.065); }
+[data-chapter='6'] { --chapter-glow: rgba(170, 180, 190, 0.05); }
+[data-chapter='7'] { --chapter-glow: rgba(150, 120, 90, 0.045); }
+[data-chapter='8'] { --chapter-glow: rgba(180, 170, 210, 0.065); }
+[data-chapter='9'] { --chapter-glow: rgba(201, 162, 39, 0.08); }
+[data-chapter='10'] { --chapter-glow: rgba(201, 162, 39, 0.12); }
 
 /* Grain: a tiny tiling SVG turbulence, scaled up. ~1kb, no network request. */
 .atmosphere::after {

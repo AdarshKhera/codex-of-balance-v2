@@ -3,7 +3,6 @@ import { Sigil } from '../Sigil';
 import { BackIcon, CodexIcon, PlayIcon } from '../Icons';
 import { ELEMENT_NAME } from '../../game/elements';
 import type { ElementId } from '../../game/elements';
-import { RULES } from '../../game/engine';
 import type { MatchState } from '../../game/engine';
 import './match.css';
 
@@ -44,7 +43,7 @@ export function Match({ state, onChoose, onNext, onQuit, onCodex }: MatchProps) 
         <button className="icon-btn" onClick={onQuit} aria-label="Leave match">
           <BackIcon />
         </button>
-        <Pips history={state.history} />
+        <Pips history={state.history} rounds={state.config.rounds} />
         <button className="icon-btn" onClick={onCodex} aria-label="Open the Codex">
           <CodexIcon />
         </button>
@@ -53,7 +52,7 @@ export function Match({ state, onChoose, onNext, onQuit, onCodex }: MatchProps) 
       <div className="match__score">
         <Side name={state.playerName} score={state.playerScore} align="start" mine />
         <span className="match__tally">
-          {state.roundsPlayed} / {RULES.rounds}
+          {state.roundsPlayed} / {state.config.rounds}
         </span>
         <Side name="Conscience" score={state.opponentScore} align="end" />
       </div>
@@ -115,10 +114,13 @@ function Side({
   );
 }
 
-function Pips({ history }: { history: string[] }) {
+function Pips({ history, rounds }: { history: string[]; rounds: number }) {
   return (
-    <ol className="pips" aria-label={`Round ${history.length} of ${RULES.rounds}`}>
-      {Array.from({ length: RULES.rounds }, (_, i) => (
+    <ol
+      className={`pips ${rounds > 10 ? 'pips--wide' : ''}`}
+      aria-label={`Round ${history.length} of ${rounds}`}
+    >
+      {Array.from({ length: rounds }, (_, i) => (
         <li key={i} className={`pip ${history[i] ? `pip--${history[i]}` : ''}`} />
       ))}
     </ol>

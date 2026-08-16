@@ -7,28 +7,58 @@ import type { ElementId, Outcome, RoundResult } from './elements';
    maths. One place, named, testable.
    ============================================================ */
 
-export const RULES = {
+/**
+ * A match's rules are now data passed in rather than one fixed global, so
+ * Story (10 rounds, a growing element pool, Dragon withheld until chapter
+ * ten) and Free Play (20 rounds, everything unlocked) can share this exact
+ * engine instead of forking it.
+ */
+export interface MatchConfig {
+  /** The elements in play, never including the Dragon. */
+  pool: ElementId[];
+  rounds: number;
+  target: number;
+  /** Chance the Dragon is offered at the start of a round. 0 = withheld. */
+  dragonSpawn: number;
+  /** If the Dragon is on the table, how often the opponent reaches for it too. */
+  dragonOpponentUse: number;
+}
+
+/**
+ * The default, full-roster ruleset. Story's early chapters build their own
+ * config with a smaller pool and the Dragon withheld (see game/ascent.ts);
+ * this is what Codex and Tutorial quote as "how the game normally works",
+ * and what a chapter ten / freshly-started match falls back to.
+ */
+export const RULES: MatchConfig = {
+  pool: CORE_ELEMENTS,
   rounds: 10,
   target: 6,
-  /** Chance the Dragon is offered at the start of a round. */
-  dragonSpawn: 0.25,
   /**
-   * If the Dragon is on the table, how often the opponent reaches for it too.
-   * At the old 0.15 the opponent almost never contested it, so simply taking
-   * the Dragon every time it appeared won about 77% of matches. Raising this
-   * puts a real match at roughly 65%: winnable, but not automatic.
+   * At 0.15 opponent-contest the old default let a player who simply always
+   * took the Dragon win about 77% of matches. 0.35 puts a real match at
+   * roughly 65%: winnable, but not automatic.
    */
+  dragonSpawn: 0.25,
   dragonOpponentUse: 0.35
-} as const;
+};
+
+/** Free Play: everything unlocked, no progression, a longer match. */
+export const FREE_PLAY_RULES: MatchConfig = {
+  ...RULES,
+  rounds: 20,
+  target: 11
+};
 
 export type MatchOutcome = 'player' | 'opponent' | 'draw';
 
 export interface MatchState {
   playerName: string;
+  config: MatchConfig;
   playerScore: number;
   opponentScore: number;
   roundsPlayed: number;
-  /** Elements offered this round, 18, or 19 when the Dragon appears. */
+  /** Elements offered this round: config.pool, plus the Dragon when it spawns. */
   hand: ElementId[];
   /** Result of the round just played; null while choosing. */
   round: RoundResult | null;
@@ -39,19 +69,20 @@ export interface MatchState {
   complete: boolean;
 }
 
-function dealHand(): ElementId[] {
+function dealHand(config: MatchConfig): ElementId[] {
   // The Dragon leads the hand when it appears. Tacked on the end it read as an
   // afterthought stranded on its own row.
-  return Math.random() < RULES.dragonSpawn ? [DRAGON, ...CORE_ELEMENTS] : CORE_ELEMENTS;
+  return Math.random() < config.dragonSpawn ? [DRAGON, ...config.pool] : config.pool;
 }
 
-export function createMatch(playerName: string): MatchState {
+export function createMatch(playerName: string, config: MatchConfig = RULES): MatchState {
   return {
     playerName,
+    config,
     playerScore: 0,
     opponentScore: 0,
     roundsPlayed: 0,
-    hand: dealHand(),
+    hand: dealHand(config),
     round: null,
     history: [],
     startedAt: Date.now(),
@@ -60,8 +91,8 @@ export function createMatch(playerName: string): MatchState {
   };
 }
 
-function chooseForOpponent(hand: ElementId[]): ElementId {
-  if (hand.includes(DRAGON) && Math.random() < RULES.dragonOpponentUse) return DRAGON;
+function chooseForOpponent(hand: ElementId[], config: MatchConfig): ElementId {
+  if (hand.includes(DRAGON) && Math.random() < config.dragonOpponentUse) return DRAGON;
   const pool = hand.filter((e) => e !== DRAGON);
   return pool[Math.floor(Math.random() * pool.length)];
 }
@@ -74,16 +105,16 @@ function chooseForOpponent(hand: ElementId[]): ElementId {
 export function playRound(state: MatchState, choice: ElementId): MatchState {
   if (state.complete || state.round) return state;
 
-  const round = resolve(choice, chooseForOpponent(state.hand));
+  const round = resolve(choice, chooseForOpponent(state.hand, state.config));
   const playerScore = state.playerScore + (round.outcome === 'win' ? 1 : 0);
   const opponentScore = state.opponentScore + (round.outcome === 'lose' ? 1 : 0);
   const roundsPlayed = state.roundsPlayed + 1;
 
   // A tie still consumes a round, so this must be checked on every outcome.
   const complete =
-    playerScore >= RULES.target ||
-    opponentScore >= RULES.target ||
-    roundsPlayed >= RULES.rounds;
+    playerScore >= state.config.target ||
+    opponentScore >= state.config.target ||
+    roundsPlayed >= state.config.rounds;
 
   return {
     ...state,
@@ -100,7 +131,7 @@ export function playRound(state: MatchState, choice: ElementId): MatchState {
 /** Clear the reveal and deal a fresh hand. No-op once the match is over. */
 export function nextRound(state: MatchState): MatchState {
   if (state.complete) return state;
-  return { ...state, round: null, hand: dealHand() };
+  return { ...state, round: null, hand: dealHand(state.config) };
 }
 
 export function matchOutcome(state: MatchState): MatchOutcome {

@@ -1,14 +1,15 @@
 import { useState } from 'react';
 import { BackIcon, ForwardIcon } from '../Icons';
-import { RULES } from '../../game/engine';
+import type { MatchConfig } from '../../game/engine';
 import './naming.css';
 
 interface NamingProps {
+  config: MatchConfig;
   onBegin: (name: string) => void;
   onBack: () => void;
 }
 
-export function Naming({ onBegin, onBack }: NamingProps) {
+export function Naming({ config, onBegin, onBack }: NamingProps) {
   const [name, setName] = useState('');
   const trimmed = name.trim();
 
@@ -50,7 +51,7 @@ export function Naming({ onBegin, onBack }: NamingProps) {
         </div>
 
         <p className="naming__terms rise" style={{ animationDelay: '280ms' }}>
-          Best of {RULES.rounds}. First to {RULES.target} takes the match.
+          Best of {config.rounds}. First to {config.target} takes the match.
         </p>
       </main>
 

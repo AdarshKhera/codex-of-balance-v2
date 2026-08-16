@@ -1,3 +1,31 @@
+.records__leaderboard {
+  list-style: none;
+  display: grid;
+  gap: 2px;
+  margin-bottom: var(--space-6);
+  padding-bottom: var(--space-5);
+  border-bottom: 1px solid var(--ink-500);
+}
+
+.ascent-row {
+  display: grid;
+  grid-template-columns: 1.25rem 1fr auto auto;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-1);
+  font-size: var(--text-small);
+}
+
+.ascent-row__rank { color: var(--bone-600); font-variant-numeric: tabular-nums; }
+.ascent-row__name {
+  color: var(--bone-200);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ascent-row__chapter { color: var(--gilt); letter-spacing: 0.03em; }
+.ascent-row__wins { color: var(--bone-500); }
+
 .records__chrome {
   display: flex;
   align-items: flex-start;

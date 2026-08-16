@@ -1,6 +1,8 @@
 import { RecordsIcon } from '../Icons';
 import { elapsed, matchOutcome } from '../../game/engine';
 import type { MatchState } from '../../game/engine';
+import { romanNumeral } from '../../game/ascent';
+import type { Chapter } from '../../game/ascent';
 import './verdict.css';
 
 interface VerdictProps {
@@ -8,6 +10,9 @@ interface VerdictProps {
   onAgain: () => void;
   onTitle: () => void;
   onRecords: () => void;
+  /** Set only when this win just unlocked a new chapter of the Ascent. */
+  chapterUnlocked?: Chapter | null;
+  onContinueAscent?: () => void;
 }
 
 const COPY = {
@@ -25,7 +30,14 @@ const COPY = {
   }
 } as const;
 
-export function Verdict({ state, onAgain, onTitle, onRecords }: VerdictProps) {
+export function Verdict({
+  state,
+  onAgain,
+  onTitle,
+  onRecords,
+  chapterUnlocked,
+  onContinueAscent
+}: VerdictProps) {
   const outcome = matchOutcome(state);
   const copy = COPY[outcome];
 
@@ -66,14 +78,25 @@ export function Verdict({ state, onAgain, onTitle, onRecords }: VerdictProps) {
         </dl>
       </main>
 
-      <footer className="verdict__foot rise" style={{ animationDelay: '400ms' }}>
-        <button className="text-btn" onClick={onTitle}>
-          Leave
-        </button>
-        <button className="verdict__again" onClick={onAgain}>
-          Again
-        </button>
-      </footer>
+      {chapterUnlocked ? (
+        <footer className="verdict__foot verdict__foot--single rise" style={{ animationDelay: '400ms' }}>
+          <p className="verdict__unlocked">
+            Chapter {romanNumeral(chapterUnlocked.number)} is open.
+          </p>
+          <button className="verdict__again" onClick={onContinueAscent}>
+            Continue
+          </button>
+        </footer>
+      ) : (
+        <footer className="verdict__foot rise" style={{ animationDelay: '400ms' }}>
+          <button className="text-btn" onClick={onTitle}>
+            Leave
+          </button>
+          <button className="verdict__again" onClick={onAgain}>
+            Again
+          </button>
+        </footer>
+      )}
     </div>
   );
 }

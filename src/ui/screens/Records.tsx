@@ -1,15 +1,18 @@
 import { useEffect, useRef, useState } from 'react';
 import { CloseIcon } from '../Icons';
 import type { Record_ } from '../../game/engine';
+import { romanNumeral } from '../../game/ascent';
+import type { LeaderboardEntry } from '../../game/ascent';
 import './records.css';
 
 interface RecordsProps {
   records: Record_[];
+  leaderboard: LeaderboardEntry[];
   onClose: () => void;
   onClear: () => void;
 }
 
-export function Records({ records, onClose, onClear }: RecordsProps) {
+export function Records({ records, leaderboard, onClose, onClear }: RecordsProps) {
   const [arming, setArming] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout>>();
 
@@ -38,6 +41,19 @@ export function Records({ records, onClose, onClear }: RecordsProps) {
           <CloseIcon />
         </button>
       </header>
+
+      {leaderboard.length > 0 && (
+        <ol className="records__leaderboard">
+          {leaderboard.map((e, i) => (
+            <li key={e.name} className="ascent-row">
+              <span className="ascent-row__rank">{i + 1}</span>
+              <span className="ascent-row__name">{e.name}</span>
+              <span className="ascent-row__chapter">Ch. {romanNumeral(e.highestChapter)}</span>
+              <span className="ascent-row__wins">{e.lifetimeWins} wins</span>
+            </li>
+          ))}
+        </ol>
+      )}
 
       {records.length === 0 ? (
         <div className="records__empty">

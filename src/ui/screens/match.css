@@ -26,6 +26,10 @@
 .pip--lose { background: var(--verdict-lose); }
 .pip--tie { background: var(--bone-400); }
 
+/* Free Play runs 20 rounds; the same pip size would overflow the header. */
+.pips--wide { gap: 3px; }
+.pips--wide .pip { width: 7px; }
+
 /* --- Score rail --- */
 .match__score {
   display: grid;
