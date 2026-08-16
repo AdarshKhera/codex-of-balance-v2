@@ -20,56 +20,56 @@ export const CHAPTERS: Chapter[] = [
   {
     number: 1,
     name: 'Instinct',
-    adds: ['fire', 'water'],
-    blurb: 'The first two things anything feels: heat and flow, urgency and yielding.'
+    adds: ['fire', 'water', 'life', 'void'],
+    blurb: 'The rawest forces. Heat and flow, something and nothing. Before there is a self, there is this.'
   },
   {
     number: 2,
-    name: 'Presence',
-    adds: ['life', 'void'],
-    blurb: 'Something and nothing. The self begins in the gap between having and lacking.'
-  },
-  {
-    number: 3,
     name: 'Perception',
     adds: ['light', 'stone'],
     blurb: 'What reveals, and what refuses to move. Insight and stubbornness.'
   },
   {
-    number: 4,
+    number: 3,
     name: 'Reaction',
     adds: ['ice', 'lightning'],
     blurb: 'Stillness and sudden force. Two opposite ways of responding when something happens to you.'
   },
   {
-    number: 5,
+    number: 4,
     name: 'Inwardness',
     adds: ['mind', 'spirit'],
     blurb: 'Thought and intuition. The first elements that live inside you rather than around you.'
   },
   {
-    number: 6,
+    number: 5,
     name: 'Design',
     adds: ['order', 'chaos'],
     blurb: 'How you organize the world, and how the world refuses to stay organized.'
   },
   {
-    number: 7,
+    number: 6,
     name: 'Reckoning',
     adds: ['time', 'death'],
-    blurb: "What erodes, and what ends. The heaviest chapter, on purpose."
+    blurb: 'What erodes, and what ends. The heaviest chapter, on purpose.'
   },
   {
-    number: 8,
+    number: 7,
     name: 'The Unseen',
     adds: ['dream', 'mist'],
     blurb: "What's felt but not provable. The unconscious, the half-seen."
   },
   {
-    number: 9,
+    number: 8,
     name: 'Judgment',
     adds: ['balance', 'mask'],
-    blurb: 'How you weigh what you have learned, and the face you show while doing it.'
+    blurb: 'How you weigh what you have learned, and the face you show while doing it. The last of the eighteen.'
+  },
+  {
+    number: 9,
+    name: 'Communion',
+    adds: [],
+    blurb: 'Nothing left to add. Only to prove, once more, that you have actually learned it.'
   },
   {
     number: 10,

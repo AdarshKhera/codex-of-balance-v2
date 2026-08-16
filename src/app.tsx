@@ -3,6 +3,7 @@ import { Prologue } from './ui/screens/Prologue';
 import { Title } from './ui/screens/Title';
 import { ModeSelect } from './ui/screens/ModeSelect';
 import { Naming } from './ui/screens/Naming';
+import { LevelSelect } from './ui/screens/LevelSelect';
 import { Match } from './ui/screens/Match';
 import { ChapterClear } from './ui/screens/ChapterClear';
 import { Verdict } from './ui/screens/Verdict';
@@ -17,9 +18,10 @@ import {
   playRound,
   saveRecord,
   matchOutcome,
+  RULES,
   FREE_PLAY_RULES
 } from './game/engine';
-import type { MatchConfig, MatchState, Record_ } from './game/engine';
+import type { MatchState, Record_ } from './game/engine';
 import type { ElementId } from './game/elements';
 import {
   chapterConfig,
@@ -35,6 +37,7 @@ type View =
   | 'title'
   | 'mode'
   | 'naming'
+  | 'levelSelect'
   | 'match'
   | 'chapterClear'
   | 'verdict'
@@ -51,6 +54,8 @@ export default function App() {
   const [tutorialOpen, setTutorialOpen] = useState(false);
 
   const [mode, setMode] = useState<GameMode>('freeplay');
+  /** Set once on entering Story, reused for every chapter until you leave Story entirely. */
+  const [playerName, setPlayerName] = useState('');
   const [chapter, setChapter] = useState(1);
   const [ascent, setAscent] = useState<AscentProgress>(loadAscent);
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>(loadLeaderboard);
@@ -62,10 +67,10 @@ export default function App() {
 
   // The atmosphere tints per chapter (see the [data-chapter] rules in
   // global.css) whenever a Story chapter is actually on screen, and reverts
-  // to neutral everywhere else, including Free Play.
+  // to neutral everywhere else, including Free Play and the level map.
   useEffect(() => {
-    const inStoryFlow = mode === 'story' && ['naming', 'match', 'chapterClear', 'verdict'].includes(view);
-    if (inStoryFlow) {
+    const inChapter = mode === 'story' && (view === 'match' || view === 'chapterClear' || view === 'verdict');
+    if (inChapter) {
       document.documentElement.dataset.chapter = String(chapter);
     } else {
       delete document.documentElement.dataset.chapter;
@@ -79,10 +84,16 @@ export default function App() {
 
   const finishPrologue = useCallback(() => setView('title'), []);
 
-  const begin = (name: string) => {
-    const config: MatchConfig = mode === 'story' ? chapterConfig(chapter) : FREE_PLAY_RULES;
+  /** Start a specific chapter's match. Assumes playerName is already set. */
+  const beginChapter = (n: number) => {
+    setChapter(n);
     setJustUnlocked(null);
-    setMatch(createMatch(name, config));
+    setMatch(createMatch(playerName, chapterConfig(n)));
+    setView('match');
+  };
+
+  const beginFreePlay = (name: string) => {
+    setMatch(createMatch(name, FREE_PLAY_RULES));
     setView('match');
   };
 
@@ -130,7 +141,6 @@ export default function App() {
           highestChapter={ascent.highestChapter}
           onStory={() => {
             setMode('story');
-            setChapter(ascent.highestChapter);
             setView('naming');
           }}
           onFreePlay={() => {
@@ -143,9 +153,26 @@ export default function App() {
 
       {view === 'naming' && (
         <Naming
-          config={mode === 'story' ? chapterConfig(chapter) : FREE_PLAY_RULES}
-          onBegin={begin}
+          rounds={mode === 'story' ? RULES.rounds : FREE_PLAY_RULES.rounds}
+          target={mode === 'story' ? RULES.target : FREE_PLAY_RULES.target}
+          onBegin={(name) => {
+            if (mode === 'story') {
+              setPlayerName(name);
+              setView('levelSelect');
+            } else {
+              beginFreePlay(name);
+            }
+          }}
           onBack={() => setView('mode')}
+        />
+      )}
+
+      {view === 'levelSelect' && (
+        <LevelSelect
+          playerName={playerName}
+          highestChapter={ascent.highestChapter}
+          onSelect={beginChapter}
+          onBack={() => setView('title')}
         />
       )}
 
@@ -154,30 +181,22 @@ export default function App() {
           state={match}
           onChoose={choose}
           onNext={() => setMatch((c) => (c ? nextRound(c) : c))}
-          onQuit={() => setView('title')}
+          onQuit={() => setView(mode === 'story' ? 'levelSelect' : 'title')}
           onCodex={() => openOverlay('codex')}
         />
       )}
 
       {view === 'chapterClear' && justUnlocked && (
-        <ChapterClear
-          chapter={justUnlocked}
-          onContinue={() => {
-            const finished = justUnlocked.number >= 10;
-            setChapter(justUnlocked.number);
-            setJustUnlocked(null);
-            // Chapter ten has nothing further to unlock, so "Return" goes back
-            // to the title rather than straight into another match.
-            setView(finished ? 'title' : 'naming');
-          }}
-        />
+        <ChapterClear chapter={justUnlocked} onContinue={() => setView('levelSelect')} />
       )}
 
       {view === 'verdict' && match && (
         <Verdict
           state={match}
-          onAgain={() => begin(match.playerName)}
-          onTitle={() => setView('title')}
+          onAgain={() =>
+            mode === 'story' ? beginChapter(chapter) : beginFreePlay(match.playerName)
+          }
+          onTitle={() => setView(mode === 'story' ? 'levelSelect' : 'title')}
           onRecords={() => openOverlay('records')}
           chapterUnlocked={justUnlocked}
           onContinueAscent={() => setView('chapterClear')}

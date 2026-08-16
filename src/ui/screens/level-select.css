@@ -1,0 +1,98 @@
+.level-select__chrome {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 calc(var(--space-2) * -1) var(--space-3);
+}
+
+.level-select__list {
+  flex: 1;
+  list-style: none;
+  display: grid;
+  gap: 6px;
+  overflow-y: auto;
+  padding-bottom: var(--space-6);
+}
+
+.level-row {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 2.25rem 1fr auto;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.015);
+  text-align: left;
+  transition: border-color var(--dur-fast) var(--ease-enter),
+    background-color var(--dur-fast) var(--ease-enter), transform var(--dur-fast) var(--ease-enter);
+}
+
+.level-row:not(.is-locked):hover {
+  border-color: var(--gilt-line);
+  background: radial-gradient(circle at 6% 0%, var(--gilt-soft), transparent 78%);
+}
+
+.level-row:not(.is-locked):active { transform: scale(0.99); }
+
+.level-row:disabled {
+  cursor: default;
+}
+
+.level-row__numeral {
+  font-family: var(--font-display);
+  font-size: var(--text-lead);
+  color: var(--bone-300);
+}
+
+.level-row__text {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.level-row__name {
+  font-size: var(--text-body);
+  color: var(--bone-200);
+  letter-spacing: 0.01em;
+}
+
+.level-row__meta {
+  font-size: var(--text-micro);
+  letter-spacing: 0.04em;
+  color: var(--bone-600);
+}
+
+.level-row__status {
+  display: grid;
+  place-items: center;
+  color: var(--bone-600);
+}
+
+.level-row__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  background: var(--gilt);
+}
+
+/* Current: the one row that's actually inviting a tap right now. */
+.level-row.is-current {
+  border-color: var(--gilt-line);
+  background: radial-gradient(circle at 6% 0%, var(--gilt-soft), transparent 78%);
+}
+
+.level-row.is-current .level-row__numeral { color: var(--gilt); }
+
+/* Cleared: quiet confirmation, still fully replayable. */
+.level-row.is-cleared .level-row__status { color: var(--gilt); }
+.level-row.is-cleared .level-row__numeral { color: var(--bone-400); }
+
+/* Locked: present, legible, unmistakably not yet yours. */
+.level-row.is-locked {
+  opacity: 0.4;
+}
+
+.level-row.is-locked .level-row__numeral { color: var(--bone-600); }
+.level-row.is-locked .level-row__name { color: var(--bone-600); }
