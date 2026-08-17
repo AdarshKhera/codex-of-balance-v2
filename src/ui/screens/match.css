@@ -69,17 +69,12 @@
 /* A life you still have reads as healthy (solid bone), not alarming. Losing
    one drains it to a bare outline in the "lose" hue, so the danger signal is
    the draining, not the having. */
-.lives__dot {
-  width: 9px;
-  height: 9px;
-  border-radius: var(--radius-full);
-  border: 1px solid var(--verdict-lose);
-  background: transparent;
-  transition: background-color var(--dur-base) var(--ease-enter),
-    border-color var(--dur-base) var(--ease-enter);
+.lives__heart {
+  color: var(--verdict-lose);
+  transition: color var(--dur-base) var(--ease-enter);
 }
 
-.lives__dot.is-full { background: var(--bone-200); border-color: var(--bone-200); }
+.lives__heart.is-full { color: var(--bone-200); }
 
 .lives--infinite {
   font-size: var(--text-lead);

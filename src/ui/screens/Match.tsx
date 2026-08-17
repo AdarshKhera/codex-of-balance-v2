@@ -111,9 +111,27 @@ function Lives({ lives }: { lives: number }) {
   return (
     <div className="lives" aria-label={`${lives} lives remaining`}>
       {Array.from({ length: 3 }, (_, i) => (
-        <span key={i} className={`lives__dot ${i < lives ? 'is-full' : ''}`} />
+        <HeartIcon key={i} full={i < lives} />
       ))}
     </div>
+  );
+}
+
+function HeartIcon({ full }: { full: boolean }) {
+  return (
+    <svg
+      width="15"
+      height="15"
+      viewBox="0 0 32 32"
+      fill={full ? 'currentColor' : 'none'}
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinejoin="round"
+      className={`lives__heart ${full ? 'is-full' : ''}`}
+      aria-hidden="true"
+    >
+      <path d="M16 27c-6.5-4.3-11-8.4-11-13.6C5 9.6 7.9 7 11.2 7c2 0 3.8 1 4.8 2.7C17 8 18.8 7 20.8 7 24.1 7 27 9.6 27 13.4 27 18.6 22.5 22.7 16 27Z" />
+    </svg>
   );
 }
 
